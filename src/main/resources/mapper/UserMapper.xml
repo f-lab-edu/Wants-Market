@@ -28,4 +28,16 @@
             from user
             where user_id = #{userId}
     </select>
+
+    <select id = "findUserByLoginId" resultType="com.wants.market.core.domain.User">
+            select *
+            from user
+            where user_id = #{loginId}
+    </select>
+
+    <select id = "findUserById" resultType="com.wants.market.core.domain.User">
+        select *
+        from user
+        where id = #{Id}
+    </select>
 </mapper>
