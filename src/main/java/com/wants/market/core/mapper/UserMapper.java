@@ -10,4 +10,7 @@ public interface UserMapper {
 
     boolean isExistsUserId(String userId);
 
+    User findUserByLoginId(String userId);
+
+    User findUserById(Long id);
 }
