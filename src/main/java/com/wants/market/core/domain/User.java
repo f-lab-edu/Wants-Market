@@ -2,6 +2,7 @@ package com.wants.market.core.domain;
 
 import com.wants.market.user.dto.CreateUserRequest;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 public class User {
 
