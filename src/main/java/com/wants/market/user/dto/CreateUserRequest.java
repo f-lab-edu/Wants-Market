@@ -30,6 +30,9 @@ public class CreateUserRequest {
     @NotBlank(message = "전화번호는 필수 입력값입니다.")
     private String phone;
 
+    @NotBlank(message = "주소는 필수 입력값입니다.")
+    private String address;
+
     @NotBlank
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     private String email;
