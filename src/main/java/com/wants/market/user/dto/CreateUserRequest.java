@@ -24,6 +24,9 @@ public class CreateUserRequest {
     @NotBlank(message = "이름은 필수 입력값입니다.")
     private String name;
 
+    @NotBlank(message = "주소는 필수 입력값입니다.")
+    private String address;
+
     @NotBlank(message = "닉네임은 필수 입력값입니다.")
     private String nickname;
 

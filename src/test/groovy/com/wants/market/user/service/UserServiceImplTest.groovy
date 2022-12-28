@@ -11,13 +11,14 @@ class UserServiceImplTest extends Specification {
 
     UserMapper userMapper = Mock()
     PasswordEncoder passwordEncoder = Mock()
-    UserServiceImpl userService = new UserServiceImpl(userMapper, passwordEncoder)
+    SessionService sessionService = Mock()
+    UserServiceImpl userService = new UserServiceImpl(userMapper, passwordEncoder, sessionService)
 
     def "회원가입 테스트 - 성공(존재하지 않는 이메일로 가입 시도)"() {
 
         given:
         CreateUserRequest request = new CreateUserRequest("testId", "testPassword1!", "testName",
-                "testNickName", "010-1234-5678", "test.com")
+                "testAddress", "testNickName", "010-1234-5678", "test.com")
         userMapper.isExistsUserId("testId") >> false
         passwordEncoder.encode("testPassword1!") >> "hashedPassword"
 
@@ -33,10 +34,9 @@ class UserServiceImplTest extends Specification {
     }
 
     def "회원가입 테스트 - 실패(존재하는 이메일로 가입 시도)"() {
-
         given:
         CreateUserRequest request = new CreateUserRequest("testId", "testPassword1!", "testName",
-                "testNickName", "010-1234-5678", "test.com")
+                "testAddress", "testNickName", "010-1234-5678", "test.com")
         userMapper.isExistsUserId("testId") >> true
         passwordEncoder.encode("testPassword1!") >> "hashedPassword"
 
@@ -45,5 +45,18 @@ class UserServiceImplTest extends Specification {
 
         then:
         thrown(DuplicatedIdException)
+    }
+
+
+    def "회원가입 한 유저 삭제 성공" () {
+        given:
+        User user = new User()
+        sessionService.getLoggedInUserFromDatabase() >> user
+
+        when:
+        userService.deleteUser()
+
+        then:
+        userMapper.deleteUser(user.getId())
     }
 }
