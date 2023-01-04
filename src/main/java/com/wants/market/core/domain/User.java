@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Getter
-public class User {
+public class User implements Serializable {
 
     private Long id;
 
@@ -28,6 +29,8 @@ public class User {
     private String phone;
 
     private String email;
+
+    private String address;
 
     private String profileImage;
 
@@ -51,6 +54,7 @@ public class User {
         user.nickname = createUserRequest.getNickname();
         user.phone = createUserRequest.getPhone();
         user.email = createUserRequest.getEmail();
+        user.address = createUserRequest.getAddress();
         user.agreeTerms = Agree.Y;
         user.marketingTerms = Agree.N;
         user.mannerTemp = new BigDecimal("36.5");
