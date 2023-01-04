@@ -21,20 +21,18 @@ public class GeocodingService {
         List<ReverseGeoData.Address> addresses = reverseGeoData.getResults();
 
         boolean matched = false;
-        Long userId = null;
+        User user = sessionService.getLoggedInUserFromDatabase();
+
         for(ReverseGeoData.Address data : addresses) {
             ReverseGeoData.Region region = data.getRegion();
 
-            User user = sessionService.getLoggedInUserFromDatabase();
-
             if(user.getAddress().equals(region.area3.name)) {
                 matched = true;
-                userId = user.getId();
                 break;
             }
         }
 
-        userRegionMapper.insertLocation(request.getLongitude(), request.getLatitude(), matched ? "Y" : "N", userId);
+        userRegionMapper.insertLocation(request.getLongitude(), request.getLatitude(), matched ? "Y" : "N", user.getId());
         return matched;
     }
 }
