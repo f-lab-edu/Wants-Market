@@ -1,0 +1,41 @@
+<?xml version= "1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace ="com.wants.market.core.mapper.PostMapper">
+
+    <select id = "findPostById" resultType="com.wants.market.core.domain.Post">
+            select * from post where id = #{id}
+    </select>
+
+    <select id = "findPostByAddress" resultType="com.wants.market.core.domain.Post">
+        select * from post where address = #{address}
+        order by id desc
+    </select>
+
+    <select id = "findPostByAddressAndCategory" resultType="com.wants.market.core.domain.Post">
+        select * from post where address = #{address} and category = #{categoryId}
+        order by id desc limit #{pageSize} offset #{offset}
+    </select>
+
+
+    <insert id = "insertPost" parameterType="com.wants.market.core.domain.Post"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+            insert into post (title, content,
+                              category, address, trade_status,
+                              created_at, updated_at, user_id)
+            values (#{title}, #{content},
+                    #{category}, #{address}, #{tradeStatus},
+                    #{createdAt}, #{updatedAt}, #{userId})
+    </insert>
+
+    <update id = "updatePost" parameterType="com.wants.market.core.domain.Post">
+            update post set title = #{title},
+                            content = #{content}
+            where id = #{id}
+    </update>
+
+    <delete id = "deletePost" parameterType="Long">
+            delete from post where id = #{id}
+    </delete>
+</mapper>
