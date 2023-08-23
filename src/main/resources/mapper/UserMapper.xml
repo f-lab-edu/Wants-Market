@@ -10,19 +10,33 @@
         where id = #{id};
     </update>
 
+
     <insert id = "insertUser" parameterType="com.wants.market.core.domain.User"
     useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         INSERT INTO user (user_id, password,
                           name, nickname,
-                          phone, email,
+                          phone, email, address,
                           manner_temp, agree_terms,
                           marketing_terms, created_at, updated_at)
         VALUES(#{userId}, #{password},
                #{name}, #{nickname},
-               #{phone}, #{email},
+               #{phone}, #{email}, #{address},
                #{mannerTemp}, #{agreeTerms},
                #{marketingTerms}, #{createdAt}, #{updatedAt})
     </insert>
+
+    <delete id = "deleteUser" parameterType="Long">
+        DELETE FROM USER WHERE id = #{id}
+    </delete>
+
+    <update id = "updateUserProfile" parameterType="com.wants.market.core.domain.User">
+            update user set password = #{password},
+                            nickname = #{nickname},
+                            phone = #{phone},
+                            address = #{address},
+                            updated_at = NOW()
+            where id = #{id}
+    </update>
 
     <select id = "isExistsUserId" resultType="boolean">
             select exists
@@ -46,4 +60,5 @@
             from user
             where id = #{id}
     </select>
+
 </mapper>

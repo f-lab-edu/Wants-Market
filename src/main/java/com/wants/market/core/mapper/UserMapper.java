@@ -10,6 +10,10 @@ public interface UserMapper {
 
     void insertUser(User user);
 
+    void updateUserProfile(User user);
+
+    void deleteUser(Long id);
+
     boolean isExistsUserId(String userId);
 
     User findUserByLoginId(String userId);
