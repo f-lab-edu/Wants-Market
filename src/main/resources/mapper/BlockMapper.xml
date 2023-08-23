@@ -1,0 +1,25 @@
+<?xml version= "1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace ="com.wants.market.core.mapper.BlockMapper">
+    <insert id = "insertBlock" parameterType="com.wants.market.core.domain.Block">
+        insert into block(user_id, blocked_user_id, created_at)
+        values (#{userId}, #{blockedUserId}, #{createdAt})
+    </insert>
+
+    <delete id = "removeBlockUser" parameterType="Long">
+        delete
+        from block
+        where user_id = #{userId} and blocked_user_id = #{blockUserId}
+    </delete>
+
+    <select id = "isUserBlocked" parameterType="Long" resultType="boolean">
+        select exists (select blocked_user_id from block where user_id = #{userId} and blocked_user_id = #{blockUserId})
+    </select>
+
+    <select id = "findBlockUserList" parameterType="Long" resultType="com.wants.market.block.dto.BlockList">
+        select blocked_user_id from block where user_id = #{userId}
+        order by id desc limit 30
+    </select>
+</mapper>
