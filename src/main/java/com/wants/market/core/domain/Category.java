@@ -9,13 +9,9 @@ public enum Category {
     남성잡화(6),
     기타중고물품(7);
 
-    private Integer categoryId;
+    private int categoryId;
 
-    Category(Integer categoryId) {
+    Category(int categoryId) {
         this.categoryId = categoryId;
-    }
-
-    public Integer getCategoryId() {
-        return this.categoryId;
     }
 }

@@ -1,0 +1,19 @@
+<?xml version= "1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace ="com.wants.market.core.mapper.HeartMapper">
+
+    <select id = "findHeart" resultType="int">
+        select count(*) from heart where post_id = #{postId} and user_id = #{userId}
+    </select>
+
+    <insert id = "insertHeart" parameterType="com.wants.market.core.domain.Heart">
+        insert into heart (post_id, user_id, created_at, updated_at)
+        values (#{postId}, #{userId}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <delete id = "deleteHeart" parameterType="Long">
+        delete from heart where post_id = #{postId} and user_id = #{userId}
+    </delete>
+</mapper>

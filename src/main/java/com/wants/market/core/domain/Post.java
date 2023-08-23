@@ -47,4 +47,14 @@ public class Post {
     public void removePost() {
         removed = true;
     }
+
+    public void updateCategory(String category) {
+        this.category = category;
+    }
+
+    public void updateTradeStatus(PostRequest postRequest) {
+        TradeStatus status = TradeStatus.valueOf(postRequest.getTradeStatus());
+        this.tradeStatus = status;
+    }
+
 }

@@ -1,0 +1,18 @@
+<?xml version= "1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace ="com.wants.market.core.mapper.ChatMapper">
+    <insert id = "insert" parameterType="com.wants.market.core.domain.Chat">
+        insert into chat(user_id, chat_room_id, content, created_at)
+        values (#{userId}, #{chatRoomId}, #{content}, #{createdAt})
+    </insert>
+
+    <select id = "findOldChats" resultType="com.wants.market.core.domain.Chat" parameterType="Long">
+        select * from chat where chat_room_id = #{chatRoomId} and id &lt; #{chatId} order by id DESC limit 30;
+    </select>
+
+    <select id = "findRecentChats" resultType="com.wants.market.core.domain.Chat" parameterType="Long">
+        select * from chat where chat_room_id = #{chatRoomId} and id &gt; #{chatId} order by id DESC;
+    </select>
+</mapper>

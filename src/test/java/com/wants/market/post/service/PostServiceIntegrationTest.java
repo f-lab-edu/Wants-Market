@@ -1,7 +1,7 @@
 package com.wants.market.post.service;
 
 import com.wants.market.core.mapper.PostMapper;
-import com.wants.market.post.dto.CategoryDTO;
+import com.wants.market.post.dto.CategoryRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class PostServiceIntegrationTest {
     @Test
     void findPostByAddressAndCategory() {
         String address = "석촌동";
-        CategoryDTO categoryDTO = CategoryDTO.builder()
+        CategoryRequest categoryDTO = CategoryRequest.builder()
                 .id(2)
                 .pageSize(5)
                 .pageNo(2)

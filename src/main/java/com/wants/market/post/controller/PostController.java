@@ -1,9 +1,9 @@
 package com.wants.market.post.controller;
 
 import com.wants.market.annotation.LoginValidation;
-import com.wants.market.core.domain.Post;
-import com.wants.market.post.dto.CategoryDTO;
+import com.wants.market.post.dto.CategoryRequest;
 import com.wants.market.post.dto.PostRequest;
+import com.wants.market.post.dto.PostResponse;
 import com.wants.market.post.service.PostService;
 import com.wants.market.utils.Responses;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity createPost(@RequestBody @Valid PostRequest postRequest) {
         postService.createPost(postRequest);
-        return Responses.RESPONSE_ENTITY_OK;
+        return Responses.CREATED;
     }
 
     @LoginValidation
@@ -37,21 +37,20 @@ public class PostController {
     @LoginValidation
     @DeleteMapping("/{postId}")
     public ResponseEntity removePost(@PathVariable Long postId) {
-        Post post = postService.findPostById(postId);
-        postService.removePost(post);
+        postService.removePost(postId);
         return Responses.RESPONSE_ENTITY_OK;
     }
 
     @LoginValidation
     @GetMapping("/address")
-    public ResponseEntity getPostByAddress(String address) {
-        postService.findPostByAddress(address);
-        return Responses.RESPONSE_ENTITY_OK;
+    public ResponseEntity<PostResponse> getPostByAddress(String address, Integer pageNum) {
+        PostResponse response = postService.findPostByAddress(address, pageNum);
+        return ResponseEntity.ok(response);
     }
 
     @LoginValidation
     @GetMapping("/categories")
-    public ResponseEntity getPostByAddressAndCategory(String address, CategoryDTO categoryDTO) {
+    public ResponseEntity getPostByAddressAndCategory(String address, CategoryRequest categoryDTO) {
         postService.findPostByAddressAndCategory(address, categoryDTO);
         return Responses.RESPONSE_ENTITY_OK;
     }

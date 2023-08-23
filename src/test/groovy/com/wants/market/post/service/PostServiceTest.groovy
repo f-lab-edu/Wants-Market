@@ -4,7 +4,7 @@ import com.wants.market.core.domain.Post
 import com.wants.market.core.domain.User
 import com.wants.market.core.mapper.PostMapper
 import com.wants.market.exception.UnAuthorizedAccessException
-import com.wants.market.post.dto.CategoryDTO
+import com.wants.market.post.dto.CategoryRequest
 import com.wants.market.post.dto.PostRequest
 import com.wants.market.user.service.SessionService
 import spock.lang.Specification
@@ -18,7 +18,7 @@ class PostServiceTest extends Specification {
 
     def "게시글이 성공적으로 등록될 경우 데이터가 정상적으로 저장"() {
         given:
-        PostRequest postRequest = new PostRequest("testTitle", "testContent", 1)
+        PostRequest postRequest = new PostRequest("testTitle", "testContent", 1, "판매중")
         User user = new User()
         sessionService.getLoggedInUserFromDatabase() >> user
 
@@ -31,7 +31,7 @@ class PostServiceTest extends Specification {
 
     def "게시글 업데이트 성공"() {
         given:
-        PostRequest postRequest = new PostRequest("testTitle", "testContent", 1)
+        PostRequest postRequest = new PostRequest("testTitle", "testContent", 1, "판매중")
         User user = new User()
         sessionService.getLoggedInUserFromDatabase() >> user
         Post post = new Post()
@@ -39,16 +39,17 @@ class PostServiceTest extends Specification {
         user.id = 10L
 
         when:
-        postService.updatePost(postRequest, post)
+        postService.updatePost(postRequest, post.getId())
 
         then:
         noExceptionThrown()
+        1 * categoryService.findCategoryNameById(postRequest.getCategoryId())
+        1 * postMapper.findPostById(post.getId()) >> post
         1 * postMapper.updatePost(post)
     }
 
     def "작성자가 일치하지 않을 경우 게시글 업데이트에 실패하고 UnAuthorizedAccessException 발생"() {
         given:
-        PostRequest postRequest = new PostRequest("title", "content", 1)
         User user = new User()
         sessionService.getLoggedInUserFromDatabase() >> user
         Post post = new Post()
@@ -56,26 +57,28 @@ class PostServiceTest extends Specification {
         post.userId = 5L
 
         when:
-        postService.updatePost(postRequest, post)
+        postService.validateAuthor(post)
 
         then:
         thrown(UnAuthorizedAccessException)
     }
 
-    def "작성자가 일치할 경우 게시글 삭제에 성공"() {
+    def "작성자가 일치할 경우 게시글 삭제에 성공 - removedAt 업데이트"() {
         given:
         User user = new User()
         sessionService.getLoggedInUserFromDatabase() >> user
         Post post = new Post()
         user.id = 10L
         post.userId = 10L
+        post.id = 10L
 
         when:
-        postService.removePost(post)
+        postService.removePost(post.getId())
 
         then:
         noExceptionThrown()
-        1 * postMapper.deletePost(post.getId())
+        1 * postMapper.findPostById(post.getId()) >> post
+        1 * postMapper.removedAtUpdate(post)
     }
 
     def "유저가 인증한 주소와 일치하는 글의 목록 조회 성공"() {
@@ -92,8 +95,8 @@ class PostServiceTest extends Specification {
     def "유저가 인증한 주소와 일치하는 글의 목록과 카테고리별로 조회 성공"() {
         given:
         String address = "석촌동"
-        CategoryDTO request = CategoryDTO.builder()
-                                .id(2L)
+        CategoryRequest request = CategoryRequest.builder()
+                                .id(2)
                                 .pageSize(5)
                                 .pageNo(10)
                                 .build()

@@ -5,16 +5,18 @@
 <mapper namespace ="com.wants.market.core.mapper.PostMapper">
 
     <select id = "findPostById" resultType="com.wants.market.core.domain.Post">
-            select * from post where id = #{id}
+            select * from post where id = #{id} and removed_at IS NULL
     </select>
 
     <select id = "findPostByAddress" resultType="com.wants.market.core.domain.Post">
-        select * from post where address = #{address}
-        order by id desc
+        select p.*, ifnull(h.count, 0) count from post p LEFT OUTER JOIN (select post_id, count(*) count from heart group by post_id) h
+        on p.id = h.post_id where address = #{address} and removed_at IS NULL
+        order by id desc limit #{pageSize} offset #{offset}
     </select>
 
     <select id = "findPostByAddressAndCategory" resultType="com.wants.market.core.domain.Post">
-        select * from post where address = #{address} and category = #{categoryId}
+        select p.*, ifnull(h.count, 0) count from post p LEFT OUTER JOIN (select post_id, count(*) count from heart group by post_id) h
+        on p.id = h.post_id where address = #{address} and category = #{categoryId} and removed_at IS NULL
         order by id desc limit #{pageSize} offset #{offset}
     </select>
 
@@ -23,18 +25,25 @@
             useGeneratedKeys="true" keyColumn="id" keyProperty="id">
             insert into post (title, content,
                               category, address, trade_status,
-                              created_at, updated_at, user_id)
+                              created_at, updated_at, user_id, removed_at)
             values (#{title}, #{content},
                     #{category}, #{address}, #{tradeStatus},
-                    #{createdAt}, #{updatedAt}, #{userId})
+                    #{createdAt}, #{updatedAt}, #{userId}, #{removedAt})
     </insert>
 
     <update id = "updatePost" parameterType="com.wants.market.core.domain.Post">
             update post set title = #{title},
-                            content = #{content}
+                            content = #{content},
+                            category = #{category},
+                            trade_status = #{tradeStatus}
             where id = #{id}
     </update>
 
+    <update id = "removedAtUpdate" parameterType="com.wants.market.core.domain.Post">
+        update post
+        set removed_at = #{removedAt}
+        where id = #{id}
+    </update>
     <delete id = "deletePost" parameterType="Long">
             delete from post where id = #{id}
     </delete>

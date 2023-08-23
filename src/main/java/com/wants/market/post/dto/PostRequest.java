@@ -22,4 +22,7 @@ public class PostRequest {
     private String content;
 
     private Integer categoryId;
+
+    private String tradeStatus;
+
 }
